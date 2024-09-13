@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Modal YouTube Example</title>
+    <!-- Include the CSS -->
+    <link rel="stylesheet" type="text/css" href="./video-modal-youtube.css" />
+</head>
+<body>
+    <script src="video-modal-youtube.js"></script>
+
+    <!-- Video Modal Section -->
+    <!-- First Video -->
+    <?php
+    // Simulate PHP uniqid() function for static HTML
+    $unique_id1 = 'dc-video-' . uniqid();
+    $unique_id2 = 'dc-video-' . uniqid();
+    $unique_id3 = 'dc-video-' . uniqid();
+    ?>
+
+    <figure class="dc-video-modal-youtube">
+        <button data-open-modal="<?php echo $unique_id1; ?>">
+            <!-- Replace 'thumbnail1.jpg' with the path to your thumbnail image -->
+            <img src="thumbnail1.jpg" alt="Video Thumbnail 1" class="open-modal" />
+        </button>
+        <figcaption>Caption for Video 1</figcaption>
+    </figure>
+
+    <!-- Second Video -->
+    <figure class="dc-video-modal-youtube">
+        <button data-open-modal="<?php echo $unique_id2; ?>">
+            <!-- Replace 'thumbnail2.jpg' with the path to your thumbnail image -->
+            <img src="thumbnail2.jpg" alt="Video Thumbnail 2" class="open-modal" />
+        </button>
+        <figcaption>Caption for Video 2</figcaption>
+    </figure>
+
+    <!-- Third Video -->
+    <figure class="dc-video-modal-youtube">
+        <button data-open-modal="<?php echo $unique_id3; ?>">
+            <!-- Replace 'thumbnail3.jpg' with the path to your thumbnail image -->
+            <img src="thumbnail3.jpg" alt="Video Thumbnail 3" class="open-modal" />
+        </button>
+        <figcaption>Caption for Video 3</figcaption>
+    </figure>
+
+    <!-- Dialog Modals -->
+    <!-- First Video Modal -->
+    <dialog data-modal="<?php echo $unique_id1; ?>" class="dc-modal">
+        <div class="iframe-container">
+            <!-- Replace 'VIDEO_ID_1' with the actual YouTube video ID -->
+            <iframe id="<?php echo $unique_id1; ?>" data-youtube-iframe width="1200" height="675" src="https://www.youtube.com/embed/VIDEO_ID_1?rel=0&amp;enablejsapi=1" title="YouTube video player" allowfullscreen></iframe>
+        </div>
+        <div class="dialog-footer">
+            <button data-close-modal="<?php echo $unique_id1; ?>" class="close">CLOSE</button>
+        </div>
+    </dialog>
+
+    <!-- Second Video Modal -->
+    <dialog data-modal="<?php echo $unique_id2; ?>" class="dc-modal">
+        <div class="iframe-container">
+            <!-- Replace 'VIDEO_ID_2' with the actual YouTube video ID -->
+            <iframe id="<?php echo $unique_id2; ?>" data-youtube-iframe width="1200" height="675" src="https://www.youtube.com/embed/VIDEO_ID_2?rel=0&amp;enablejsapi=1" title="YouTube video player" allowfullscreen></iframe>
+        </div>
+        <div class="dialog-footer">
+            <button data-close-modal="<?php echo $unique_id2; ?>" class="close">CLOSE</button>
+        </div>
+    </dialog>
+
+    <!-- Third Video Modal -->
+    <dialog data-modal="<?php echo $unique_id3; ?>" class="dc-modal">
+        <div class="iframe-container">
+            <!-- Replace 'VIDEO_ID_3' with the actual YouTube video ID -->
+            <iframe id="<?php echo $unique_id3; ?>" data-youtube-iframe width="1200" height="675" src="https://www.youtube.com/embed/VIDEO_ID_3?rel=0&amp;enablejsapi=1" title="YouTube video player" allowfullscreen></iframe>
+        </div>
+        <div class="dialog-footer">
+            <button data-close-modal="<?php echo $unique_id3; ?>" class="close">CLOSE</button>
+        </div>
+    </dialog>
+</body>
+</html>

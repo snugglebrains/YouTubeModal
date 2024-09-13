@@ -21,11 +21,10 @@ $videoID = get_field( 'video_id' );
 $autoplay = get_field( 'autoplay' ) ? 1 : 0;
 $controls = get_field( 'controls' ) ? 1 : 0;
 $caption = get_field( 'caption' );
-$i = rand();
 ?>
 
 <figure <?php echo $anchor; ?> class="<?php echo esc_attr( $class_name ); ?>">
-	<button data-open-modal-<?php echo $i; ?>>
+	<button data-open-modal>
 		<?php echo wp_get_attachment_image( $thumbnail, 'full', '', array( 'class' => 'open-modal' ) ); ?>
 	</button>
 
@@ -34,48 +33,31 @@ $i = rand();
 	<?php endif; ?>
 </figure>
 
-<dialog data-modal-<?php echo $i; ?> class="dc-modal">
-	<div id="video-container-<?php echo $i; ?>"></div>
-	<div class="dialog-footer">
-		<button data-close-modal-<?php echo $i; ?> class="close">CLOSE</button>
+<dialog data-modal class="dc-modal">
+	<div class="iframe-container">
+		<iframe id="dc-video-iframe" width="1200" height="675" src="https://www.youtube.com/embed/<?php echo $videoID; ?>?rel=0&amp;autoplay=<?php echo $autoplay; ?>&amp;controls=<?php echo $controls; ?>&amp;enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 	</div>
 
-	<script type="text/javascript">
-		function loadVideo() {
-			const xhttp = new XMLHttpRequest();
-			xhttp.onload = function() {
-				document.getElementById("video-container-<?php echo $i; ?>").innerHTML = this.responseText;
-			}
-			xhttp.open("GET", "dc-yt-frame-container.php", true);
-			xhttp.send();
-		}
-
-		const openButton<?php echo $i; ?> = document.querySelector("[data-open-modal-<?php echo $i; ?>]");
-		const closeButton<?php echo $i; ?> = document.querySelector("[data-close-modal-<?php echo $i; ?>]");
-		const modal<?php echo $i; ?> = document.querySelector("[data-modal-<?php echo $i; ?>]");
-
-		openButton<?php echo $i; ?>.addEventListener("click", () => {
-			loadVideo();
-			modal<?php echo $i; ?>.showModal();
-			player<?php echo $i; ?>.playVideo();
-		})
-
-		closeButton<?php echo $i; ?>.addEventListener("click", () => {
-			modal<?php echo $i; ?>.close();
-			player<?php echo $i; ?>.stopVideo();
-		})
-
-		modal<?php echo $i; ?>.addEventListener("click", e => {
-			const dialogDimensions<?php echo $i; ?> = modal<?php echo $i; ?>.getBoundingClientRect();
-			if (
-				e.clientX < dialogDimensions<?php echo $i; ?>.left ||
-				e.clientX > dialogDimensions<?php echo $i; ?>.right ||
-				e.clientY < dialogDimensions<?php echo $i; ?>.top ||
-				e.clientY > dialogDimensions<?php echo $i; ?>.bottom
-			) {
-				modal<?php echo $i; ?>.close();
-				player<?php echo $i; ?>.stopVideo();
-			}
-		})
-	</script>
+	<div class="dialog-footer">
+		<button data-close-modal class="close">CLOSE</button>
+	</div>
 </dialog>
+
+<script type="text/javascript">
+	var tag = document.createElement('script');
+	tag.id = 'iframe-demo';
+	tag.src = 'https://www.youtube.com/iframe_api';
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+	var player;
+	function onYouTubeIframeAPIReady() {
+	player = new YT.Player('dc-video-iframe', {
+		events: {
+			// 'onStateChange': onPlayerStateChange
+		}
+	});
+	}
+	// function onPlayerStateChange(event) {
+	// }
+</script>

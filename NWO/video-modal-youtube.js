@@ -1,8 +1,6 @@
-/* CHANGE NOTES
-	-- Moved JS to initialize the iframe API from php file to here
-	-- Added players object to store multiple player instances based on unique ID
-	-- onYouTubeIframeAPIReady loops through all iframes and initializes a player for each (stores in players object)
-	-- Added event listeners for better maintainability
+/*
+CHANGE NOTES
+-- Now dynamically creates iframes and injects into the page via JS
 */
 
 (function() {
@@ -16,20 +14,45 @@
   
 	var players = {};
   
+	// Function to initialize a player for a given iframe ID
+	function initializePlayer(uniqueId) {
+		players[uniqueId] = new YT.Player(uniqueId);
+	}
+  
 	// Initialize players when API is ready
 	window.onYouTubeIframeAPIReady = function() {
-	  var iframes = document.querySelectorAll('iframe[data-youtube-iframe]');
-	  iframes.forEach(function(iframe) {
-		var uniqueId = iframe.id;
-		players[uniqueId] = new YT.Player(uniqueId);
-	  });
+	  // This needs to be here for YT API, but should be left empty as players are initialized dynamically upon iframe injection
 	};
   
 	// Function to open modal and play video
 	function openModal(uniqueId) {
 	  var modal = document.querySelector('dialog[data-modal="' + uniqueId + '"]');
+	  var iframeContainer = document.getElementById('iframe-container-' + uniqueId);
+	  var videoID = iframeContainer.getAttribute('data-video-id');
+	  var controls = iframeContainer.getAttribute('data-controls');
+  
+	  if (modal && !players[uniqueId]) {
+		// Create the iframe dynamically
+		var iframe = document.createElement('iframe');
+		iframe.id = uniqueId;
+		iframe.width = '1200';
+		iframe.height = '675';
+		iframe.src = `https://www.youtube.com/embed/${videoID}?rel=0&autoplay=1&controls=${controls}&enablejsapi=1`;
+		iframe.title = "YouTube video player";
+		iframe.frameBorder = "0";
+		iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope";
+		iframe.referrerPolicy = "strict-origin-when-cross-origin";
+		iframe.allowFullscreen = true;
+  
+		// Inject the iframe into the container
+		iframeContainer.innerHTML = '';
+		iframeContainer.appendChild(iframe);
+  
+		initializePlayer(uniqueId);
+	  }
+  
 	  if (modal) {
-		modal.showModal(); // Open the modal
+		modal.showModal();
 		var player = players[uniqueId];
 		if (player && player.playVideo) {
 		  player.playVideo();
@@ -40,8 +63,10 @@
 	// Function to close modal and pause video
 	function closeModal(uniqueId) {
 	  var modal = document.querySelector('dialog[data-modal="' + uniqueId + '"]');
+	  var iframeContainer = document.getElementById('iframe-container-' + uniqueId);
+  
 	  if (modal) {
-		modal.close(); // Close the modal
+		modal.close();
 		var player = players[uniqueId];
 		if (player && player.pauseVideo) {
 		  player.pauseVideo();
@@ -80,4 +105,4 @@
 		}
 	  });
 	});
-  })();
+})();

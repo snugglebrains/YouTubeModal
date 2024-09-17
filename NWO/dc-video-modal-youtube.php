@@ -1,9 +1,8 @@
-
-<!-- CHANGE NOTES
- -- data-open-modal and data-close-modal now include the unique ID so the JS controller can identify based on which video
- -- data-modal added to DIALOG element with the unique ID so it corresponds with the right button
- -- iframe id set to the unique ID so that each instance is individually controlled
- -- Javascript moved to the video-modal-youtube.js file
+<!--
+CHANGE NOTES
+-- Instead of initializing iframe in dialog, setting up blank div so JS can inject iframe.
+-- This allows for the browser to recognize the button click as a direct interaction and allows autoplay from the iframe.
+-- Fixed blocks with broken WP from last time ...I think?
 -->
 
 <?php
@@ -44,29 +43,15 @@ $controls = isset($controls) ? $controls : 1;
 
 <!-- FIGURE ELEMENT block with WP variables -->
  <!--
-<figure <//?php echo $anchor; ?> class="<//?php echo esc_attr( $class_name ); ?>">
-    <button data-open-modal>
-	<//?php echo wp_get_attachment_image( $thumbnail, 'full', '', array( 'class' => 'open-modal' ) ); ?>
+<figure <//?php echo echo esc_attr( $anchor ); ?> class="<//?php echo esc_attr( $class_name ); ?>">
+    <button data-open-modal="<//?php echo esc_attr( $unique_id ); ?>">
+        <//?php echo wp_get_attachment_image( $thumbnail, 'full', '', array( 'class' => 'open-modal' ) ); ?>
     </button>
-
-    <//?php if( $caption ): ?>
+    <//?php if ( $caption ): ?>
         <figcaption><//?php echo $caption; ?></figcaption>
     <//?php endif; ?>
 </figure>
-	-->
-
-<!-- DIALOG ELEMENT block with WP variables -->
- <!--
-<dialog data-modal class="dc-modal">
-    <div class="iframe-container">
-        <iframe id="dc-video-iframe" width="1200" height="675" src="https://www.youtube.com/embed/<?php echo $videoID; ?>?rel=0&amp;autoplay=<?php echo $autoplay; ?>&amp;controls=<?php echo $controls; ?>&amp;enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-
-    <div class="dialog-footer">
-        <button data-close-modal class="close">CLOSE</button>
-    </div>
-</dialog>
--->
+    -->
 
 <!-- FIGURE ELEMENT block using placeholders because we have no WP plugins -->
 <figure class="dc-video-modal-youtube">
@@ -78,10 +63,32 @@ $controls = isset($controls) ? $controls : 1;
     <?php endif; ?>
 </figure>
 
+
+<!-- DIALOG ELEMENT block with WP variables -->
+ <!--
+<dialog data-modal="<//?php echo esc_attr( $unique_id ); ?>" class="dc-modal">
+    <div 
+        class="iframe-container" 
+        id="iframe-container-<//?php echo esc_attr( $unique_id ); ?>" 
+        data-video-id="<//?php echo esc_attr( $videoID ); ?>" 
+        data-controls="<//?php echo esc_attr( $controls ); ?>"
+    >
+        //<-- Iframe will be injected here dynamically via JavaScript --//>
+    </div>
+
+    <div class="dialog-footer">
+        <button data-close-modal="<//?php echo esc_attr( $unique_id ); ?>" class="close">CLOSE</button>
+    </div>
+</dialog>
+    -->
+
 <!-- DIALOG ELEMENT block using placeholders because we have no WP plugins -->
 <dialog data-modal="<?php echo $unique_id; ?>" class="dc-modal">
-    <div class="iframe-container">
-        <iframe id="<?php echo $unique_id; ?>" data-youtube-iframe width="1200" height="675" src="https://www.youtube.com/embed/<?php echo $videoID; ?>?rel=0&amp;autoplay=<?php echo $autoplay; ?>&amp;controls=<?php echo $controls; ?>&amp;enablejsapi=1" title="YouTube video player" allowfullscreen></iframe>
+    <div class="iframe-container"
+    id="iframe-container-<?php echo $unique_id; ?>"
+    data-video-id="<?php echo $videoID; ?>"
+    data-controls="<?php echo $controls; ?>">
+        <!-- Iframe will be injected here dynamically via JavaScript -->
     </div>
     <div class="dialog-footer">
         <button data-close-modal="<?php echo $unique_id; ?>" class="close">CLOSE</button>

@@ -24,7 +24,7 @@ $controls = get_field( 'controls' ) ? 1 : 0;
 $caption = get_field( 'caption' );
 ?>
  
-<figure <?php echo echo esc_attr( $anchor ); ?> class="<?php echo esc_attr( $class_name ); ?>">
+<figure <?php echo esc_attr( $anchor ); ?> class="<?php echo esc_attr( $class_name ); ?>">
     <button data-open-modal="<?php echo esc_attr( $unique_id ); ?>">
         <?php echo wp_get_attachment_image( $thumbnail, 'full', '', array( 'class' => 'open-modal' ) ); ?>
     </button>
